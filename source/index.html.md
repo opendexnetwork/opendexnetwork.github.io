@@ -19,7 +19,7 @@ var options = {
   convertFieldsToCamelCase: true,
   longsAsStrings: true,
 };
-var xudinitProto = grpc.load('xudrpc.proto', 'proto', options);
+var xudinitProto = grpc.load('opendexrpc.proto', 'proto', options);
 var tlsCert = fs.readFileSync('path/to/tls.cert');
 var sslCreds = grpc.credentials.createSsl(tlsCert);
 var xudinitClient = new xudinitProto.XudInit(host + ':' + port, sslCreds);
@@ -29,13 +29,13 @@ var xudinitClient = new xudinitProto.XudInit(host + ':' + port, sslCreds);
 # https://grpc.io/docs/tutorials/basic/python.html#generating-client-and-server-code
 
 import grpc
-import xudrpc_pb2 as xudinit, xudrpc_pb2_grpc as xudinitrpc
+import opendexrpc_pb2 as xudinit, opendexrpc_pb2_grpc as xudinitrpc
 cert = open('path/to/tls.cert', 'rb').read()
 ssl_creds = grpc.ssl_channel_credentials(cert)
 channel = grpc.secure_channel(host + ':' + port, ssl_creds)
-xudinit_stub = xudrpc.XudInitStub(channel)
+xudinit_stub = opendexrpc.XudInitStub(channel)
 ```
-A service for interacting with a locked or uninitalized xud node.
+A service for interacting with a locked or uninitalized opendex node.
 ## CreateNode
 ```javascript
 var request = {
@@ -70,17 +70,17 @@ print(response)
 # }
 ```
 ```shell
-  xucli create
+  opendex-cli create
   ```
-Creates an xud identity node key and underlying wallets. The node key and wallets are derived from a single seed and encrypted using a single password provided as a parameter to the call.
+Creates an opendex identity node key and underlying wallets. The node key and wallets are derived from a single seed and encrypted using a single password provided as a parameter to the call.
 ### Request
 Parameter | Type | Description
 --------- | ---- | -----------
-password | string | The password in utf-8 with which to encrypt the new xud node key as well as any uninitialized underlying wallets.
+password | string | The password in utf-8 with which to encrypt the new opendex node key as well as any uninitialized underlying wallets.
 ### Response
 Parameter | Type | Description
 --------- | ---- | -----------
-seed_mnemonic | string array | The 24 word mnemonic to recover the xud identity key and underlying wallets
+seed_mnemonic | string array | The 24 word mnemonic to recover the opendex identity key and underlying wallets
 initialized_lnds | string array | The list of lnd clients that were initialized.
 initialized_connext | bool | Whether the connext wallet was initialized.
 ## RestoreNode
@@ -121,16 +121,16 @@ print(response)
 # }
 ```
 ```shell
-  xucli restore [backup_directory]
+  opendex-cli restore [backup_directory]
   ```
-Restores an xud instance and underlying wallets from a seed.
+Restores an opendex instance and underlying wallets from a seed.
 ### Request
 Parameter | Type | Description
 --------- | ---- | -----------
-seed_mnemonic | string array | The 24 word mnemonic to recover the xud identity key and underlying wallets
-password | string | The password in utf-8 with which to encrypt the restored xud node key as well as any restored underlying wallets.
+seed_mnemonic | string array | The 24 word mnemonic to recover the opendex identity key and underlying wallets
+password | string | The password in utf-8 with which to encrypt the restored opendex node key as well as any restored underlying wallets.
 lnd_backups | map&lt;string, bytes&gt; | A map between the currency of the LND and its multi channel SCB
-xud_database | bytes | The XUD database backup
+xud_database | bytes | The opendex database backup
 ### Response
 Parameter | Type | Description
 --------- | ---- | -----------
@@ -168,13 +168,13 @@ print(response)
 # }
 ```
 ```shell
-  xucli unlock
+  opendex-cli unlock
   ```
-Unlocks and decrypts the xud node key and any underlying wallets.
+Unlocks and decrypts the opendex node key and any underlying wallets.
 ### Request
 Parameter | Type | Description
 --------- | ---- | -----------
-password | string | The password in utf-8 with which to unlock an existing xud node key as well as underlying client wallets such as lnd.
+password | string | The password in utf-8 with which to unlock an existing opendex node key as well as underlying client wallets such as lnd.
 ### Response
 Parameter | Type | Description
 --------- | ---- | -----------
@@ -188,7 +188,7 @@ var options = {
   convertFieldsToCamelCase: true,
   longsAsStrings: true,
 };
-var xudProto = grpc.load('xudrpc.proto', 'proto', options);
+var xudProto = grpc.load('opendexrpc.proto', 'proto', options);
 var tlsCert = fs.readFileSync('path/to/tls.cert');
 var sslCreds = grpc.credentials.createSsl(tlsCert);
 var xudClient = new xudProto.Xud(host + ':' + port, sslCreds);
@@ -198,13 +198,13 @@ var xudClient = new xudProto.Xud(host + ':' + port, sslCreds);
 # https://grpc.io/docs/tutorials/basic/python.html#generating-client-and-server-code
 
 import grpc
-import xudrpc_pb2 as xud, xudrpc_pb2_grpc as xudrpc
+import opendexrpc_pb2 as xud, opendexrpc_pb2_grpc as xudrpc
 cert = open('path/to/tls.cert', 'rb').read()
 ssl_creds = grpc.ssl_channel_credentials(cert)
 channel = grpc.secure_channel(host + ':' + port, ssl_creds)
-xud_stub = xudrpc.XudStub(channel)
+xud_stub = opendexrpc.XudStub(channel)
 ```
-The primary service for interacting with a running xud node.
+The primary service for interacting with a running opendex node.
 ## AddCurrency
 ```javascript
 var request = {
@@ -235,7 +235,7 @@ print(response)
 # Output: {}
 ```
 ```shell
-  xucli addcurrency <currency> <swap_client> [decimal_places] [token_address]
+  opendex-cli addcurrency <currency> <swap_client> [decimal_places] [token_address]
   ```
 Adds a currency to the list of supported currencies. Once added, the currency may be used for new trading pairs.
 ### Request
@@ -273,7 +273,7 @@ print(response)
 # Output: {}
 ```
 ```shell
-  xucli addpair <base_currency> <quote_currency>
+  opendex-cli addpair <base_currency> <quote_currency>
   ```
 Adds a trading pair to the list of supported trading pairs. The newly supported pair is advertised to peers so they may begin sending orders for it.
 ### Request
@@ -307,7 +307,7 @@ print(response)
 # Output: {}
 ```
 ```shell
-  xucli ban <node_identifier>
+  opendex-cli ban <node_identifier>
   ```
 Bans a node and immediately disconnects from it. This can be used to prevent any connections to a specific node.
 ### Request
@@ -342,9 +342,9 @@ print(response)
 # Output: {}
 ```
 ```shell
-  xucli changepass
+  opendex-cli changepass
   ```
-Changes the xud master password, including the wallet passwords for any underlying clients.
+Changes the opendex master password, including the wallet passwords for any underlying clients.
 ### Request
 Parameter | Type | Description
 --------- | ---- | -----------
@@ -392,7 +392,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli closechannel <currency> [node_identifier ] [--force]
+  opendex-cli closechannel <currency> [node_identifier ] [--force]
   ```
 Closes any existing payment channels with a peer for the specified currency.
 ### Request
@@ -432,7 +432,7 @@ print(response)
 # Output: {}
 ```
 ```shell
-  xucli connect <node_uri>
+  opendex-cli connect <node_uri>
   ```
 Attempts to connect to a node. Once connected, the node is added to the list of peers and becomes available for swaps and trading. A handshake exchanges information about the peer's supported trading and swap clients. Orders will be shared with the peer upon connection and upon new order placements.
 ### Request
@@ -471,9 +471,50 @@ print(response)
 # }
 ```
 ```shell
-  xucli walletdeposit <currency>
+  opendex-cli walletdeposit <currency>
   ```
-Gets an address to deposit a given currency into the xud wallets.
+Gets an address to deposit a given currency into the opendex wallets.
+### Request
+Parameter | Type | Description
+--------- | ---- | -----------
+currency | string | The ticker symbol of the currency to deposit.
+### Response
+Parameter | Type | Description
+--------- | ---- | -----------
+address | string | The address to use to deposit funds.
+## Deposit
+```javascript
+var request = {
+  currency: <string>,
+};
+
+xudClient.deposit(request, function(err, response) {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(response);
+  }
+});
+// Output:
+// {
+//  "address": <string>
+// }
+```
+```python
+request = xud.DepositRequest(
+  currency=<string>,
+)
+response = xudStub.Deposit(request)
+print(response)
+# Output:
+# {
+#  "address": <string>
+# }
+```
+```shell
+  opendex-cli deposit <currency>
+  ```
+Gets an address to deposit a given currency directly into a channel.
 ### Request
 Parameter | Type | Description
 --------- | ---- | -----------
@@ -550,7 +591,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli getbalance [currency]
+  opendex-cli getbalance [currency]
   ```
 Gets the total balance available across all payment channels and wallets for one or all currencies.
 ### Request
@@ -607,7 +648,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli getinfo
+  opendex-cli getinfo
   ```
 Gets general information about this node.
 ### Request
@@ -615,14 +656,14 @@ This request has no parameters.
 ### Response
 Parameter | Type | Description
 --------- | ---- | -----------
-version | string | The version of this instance of xud.
+version | string | The version of this instance of opendex.
 node_pub_key | string | The node pub key of this node.
 uris | string array | A list of uris that can be used to connect to this node. These are shared with peers.
 num_peers | uint32 | The number of currently connected peers.
 num_pairs | uint32 | The number of supported trading pairs.
 orders | [OrdersCount](#orderscount) | The number of active, standing orders in the order book.
 lnd | map&lt;string, [LndInfo](#lndinfo)&gt; | 
-alias | string | The alias of this instance of xud.
+alias | string | The alias of this instance of opendex.
 network | string | The network of this node.
 pending_swap_hashes | string array | 
 connext | [ConnextInfo](#connextinfo) | 
@@ -652,7 +693,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli getnemonic
+  opendex-cli getnemonic
   ```
 Gets the master seed mnemonic .
 ### Request
@@ -693,7 +734,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli getnodeinfo <node_identifier>
+  opendex-cli getnodeinfo <node_identifier>
   ```
 Gets general information about a node.
 ### Request
@@ -741,7 +782,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli listorders [pair_id] [include_own_orders] [limit]
+  opendex-cli listorders [pair_id] [include_own_orders] [limit]
   ```
 Gets orders from the order book. This call returns the state of the order book at a given point in time, although it is not guaranteed to still be vaild by the time a response is received and processed by a client. It accepts an optional trading pair id parameter. If specified, only orders for that particular trading pair are returned. Otherwise, all orders are returned. Orders are separated into buys and sells for each trading pair, but unsorted.
 ### Request
@@ -781,7 +822,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli listcurrencies
+  opendex-cli listcurrencies
   ```
 Gets a list of this node's supported currencies.
 ### Request
@@ -816,7 +857,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli listpairs
+  opendex-cli listpairs
   ```
 Gets a list of this nodes suported trading pairs.
 ### Request
@@ -851,7 +892,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli listpeers
+  opendex-cli listpeers
   ```
 Gets a list of connected peers.
 ### Request
@@ -898,7 +939,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli openchannel <currency> <amount> [node_identifier] [push_amount]
+  opendex-cli openchannel <currency> <amount> [node_identifier] [push_amount]
   ```
 Opens a payment channel to a peer for the specified amount and currency.
 ### Request
@@ -913,6 +954,65 @@ fee | uint64 | The manual fee rate set in sat/byte that should be used when craf
 Parameter | Type | Description
 --------- | ---- | -----------
 transaction_id | string | The id of the transaction that opened the channel.
+## OrderBook
+```javascript
+var request = {
+  pairId: <string>,
+  precision: <int32>,
+  limit: <uint32>,
+};
+
+xudClient.orderBook(request, function(err, response) {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log(response);
+  }
+});
+// Output:
+// {
+//  "price": <double>,
+//  "quantity": <uint64>,
+//  "sellBuckets": <Bucket[]>,
+//  "buyBuckets": <Bucket[]>,
+//  "buckets": <Buckets>
+// }
+```
+```python
+request = xud.OrderBookRequest(
+  pair_id=<string>,
+  precision=<int32>,
+  limit=<uint32>,
+)
+response = xudStub.OrderBook(request)
+print(response)
+# Output:
+# {
+#  "price": <double>,
+#  "quantity": <uint64>,
+#  "sell_buckets": <Bucket[]>,
+#  "buy_buckets": <Bucket[]>,
+#  "buckets": <Buckets>
+# }
+```
+```shell
+  opendex-cli orderbook [pair_id] [precision]
+  ```
+Gets an order book depth chart where orders are grouped into "buckets" according to their price rounded to a given level of precision.
+### Request
+Parameter | Type | Description
+--------- | ---- | -----------
+pair_id | string | The trading pair for which to retrieve orders.
+precision | int32 | The number of digits to the right of the decimal point for each price bucket. A negative number rounds digits to the left of the decimal point, e.g. -2 would round to the hundreds place.
+limit | uint32 | The maximum number of price "buckets" to return, if zero or unspecified then no limit is imposed.
+### Response
+Parameter | Type | Description
+--------- | ---- | -----------
+price | double | The rounded price of the bucket.
+quantity | uint64 | The total quantity for all orders that fall into this bucket.
+sell_buckets | [Bucket](#bucket) array | A sorted list of buckets for sell orders
+buy_buckets | [Bucket](#bucket) array | A sorted list of buckets for buy orders.
+buckets | map&lt;string, [Buckets](#buckets)&gt; | A map between currency tickers and sorted lists of order buckets
 ## PlaceOrder
 ```javascript
 var request = {
@@ -1029,8 +1129,8 @@ print(response)
 # }
 ```
 ```shell
-  xucli buy <quantity> <pair_id> <price> [order_id] [stream]
-xucli sell <quantity> <pair_id> <price> [order_id] [stream]
+  opendex-cli buy <quantity> <pair_id> <price> [order_id] [stream]
+opendex-cli sell <quantity> <pair_id> <price> [order_id] [stream]
   ```
 The synchronous, non-streaming version of PlaceOrder.
 ### Request
@@ -1157,7 +1257,7 @@ print(response)
 # Output: {}
 ```
 ```shell
-  xucli removecurrency <currency>
+  opendex-cli removecurrency <currency>
   ```
 Removes a currency from the list of supported currencies. Only currencies that are not in use for any currently supported trading pairs may be removed. Once removed, the currency can no longer be used for any supported trading pairs.
 ### Request
@@ -1204,9 +1304,9 @@ print(response)
 # }
 ```
 ```shell
-  xucli removeorder <order_id> [quantity]
+  opendex-cli removeorder <order_id> [quantity]
   ```
-Removes an order from the order book by its local id. This should be called when an order is canceled or filled outside of xud. Removed orders become immediately unavailable for swaps, and peers are notified that the order is no longer valid. Any portion of the order that is on hold due to ongoing swaps will not be removed until after the swap attempts complete.
+Removes an order from the order book by its local id. This should be called when an order is canceled or filled outside of opendex. Removed orders become immediately unavailable for swaps, and peers are notified that the order is no longer valid. Any portion of the order that is on hold due to ongoing swaps will not be removed until after the swap attempts complete.
 ### Request
 Parameter | Type | Description
 --------- | ---- | -----------
@@ -1247,7 +1347,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli removeallorders
+  opendex-cli removeallorders
   ```
 Removes all orders from the order book. Removed orders become immediately unavailable for swaps, and peers are notified that the orders are no longer valid. Any portion of the orders that is on hold due to ongoing swaps will not be removed until after the swap attempts complete.
 ### Request
@@ -1281,7 +1381,7 @@ print(response)
 # Output: {}
 ```
 ```shell
-  xucli removepair <pair_id>
+  opendex-cli removepair <pair_id>
   ```
 Removes a trading pair from the list of currently supported trading pair. This call will effectively cancel any standing orders for that trading pair. Peers are informed when a pair is no longer supported so that they will know to stop sending orders for it.
 ### Request
@@ -1314,7 +1414,7 @@ print(response)
 # Output: {}
 ```
 ```shell
-  xucli loglevel <level>
+  opendex-cli loglevel <level>
   ```
 Set the logging level.
 ### Request
@@ -1343,9 +1443,9 @@ print(response)
 # Output: {}
 ```
 ```shell
-  xucli shutdown
+  opendex-cli shutdown
   ```
-Begin gracefully shutting down xud.
+Begin gracefully shutting down opendex.
 ### Request
 This request has no parameters.
 ### Response
@@ -1572,7 +1672,7 @@ for response in stub.SubscribeSwapsAccepted(request):
 #  "currency_sending": <string>
 # }
 ```
-Subscribes to accepted swaps. This stream emits a message when the local xud node accepts a swap request from a peer, but before the swap has actually succeeded.
+Subscribes to accepted swaps. This stream emits a message when the local opendex node accepts a swap request from a peer, but before the swap has actually succeeded.
 ### Request
 This request has no parameters.
 ### Response (Streaming)
@@ -1619,7 +1719,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli tradehistory [limit]
+  opendex-cli tradehistory [limit]
   ```
 Gets a list of completed trades.
 ### Request
@@ -1660,7 +1760,7 @@ print(response)
 # }
 ```
 ```shell
-  xucli tradinglimits [currency]
+  opendex-cli tradinglimits [currency]
   ```
 Gets the trading limits for one or all currencies.
 ### Request
@@ -1697,7 +1797,7 @@ print(response)
 # Output: {}
 ```
 ```shell
-  xucli unban <node_identifier> [reconnect]
+  opendex-cli unban <node_identifier> [reconnect]
   ```
 Removes a ban from a node manually and, optionally, attempts to connect to it.
 ### Request
@@ -1745,9 +1845,9 @@ print(response)
 # }
 ```
 ```shell
-  xucli withdraw [amount] [currency] <destination> [fee]
+  opendex-cli withdraw [amount] [currency] <destination> [fee]
   ```
-Withdraws a given currency from the xud wallets to a specified address.
+Withdraws a given currency from the opendex wallets to a specified address.
 ### Request
 Parameter | Type | Description
 --------- | ---- | -----------
@@ -1826,11 +1926,11 @@ This message has no parameters.
 ## CreateNodeRequest
 Parameter | Type | Description
 --------- | ---- | -----------
-password | string | The password in utf-8 with which to encrypt the new xud node key as well as any uninitialized underlying wallets.
+password | string | The password in utf-8 with which to encrypt the new opendex node key as well as any uninitialized underlying wallets.
 ## CreateNodeResponse
 Parameter | Type | Description
 --------- | ---- | -----------
-seed_mnemonic | string array | The 24 word mnemonic to recover the xud identity key and underlying wallets
+seed_mnemonic | string array | The 24 word mnemonic to recover the opendex identity key and underlying wallets
 initialized_lnds | string array | The list of lnd clients that were initialized.
 initialized_connext | bool | Whether the connext wallet was initialized.
 ## Currency
@@ -1876,14 +1976,14 @@ This message has no parameters.
 ## GetInfoResponse
 Parameter | Type | Description
 --------- | ---- | -----------
-version | string | The version of this instance of xud.
+version | string | The version of this instance of opendex.
 node_pub_key | string | The node pub key of this node.
 uris | string array | A list of uris that can be used to connect to this node. These are shared with peers.
 num_peers | uint32 | The number of currently connected peers.
 num_pairs | uint32 | The number of supported trading pairs.
 orders | [OrdersCount](#orderscount) | The number of active, standing orders in the order book.
 lnd | map&lt;string, [LndInfo](#lndinfo)&gt; | 
-alias | string | The alias of this instance of xud.
+alias | string | The alias of this instance of opendex.
 network | string | The network of this node.
 pending_swap_hashes | string array | 
 connext | [ConnextInfo](#connextinfo) | 
@@ -1971,6 +2071,30 @@ created_at | uint64 | The epoch time in milliseconds when this order was created
 side | [OrderSide](#orderside) | Whether this order is a buy or sell
 is_own_order | bool | Whether this order is a local own order or a remote peer order.
 hold | uint64 | The quantity on hold pending swap execution.
+## OrderBookRequest
+Parameter | Type | Description
+--------- | ---- | -----------
+pair_id | string | The trading pair for which to retrieve orders.
+precision | int32 | The number of digits to the right of the decimal point for each price bucket. A negative number rounds digits to the left of the decimal point, e.g. -2 would round to the hundreds place.
+limit | uint32 | The maximum number of price "buckets" to return, if zero or unspecified then no limit is imposed.
+## OrderBookResponse
+Parameter | Type | Description
+--------- | ---- | -----------
+price | double | The rounded price of the bucket.
+quantity | uint64 | The total quantity for all orders that fall into this bucket.
+sell_buckets | [Bucket](#bucket) array | A sorted list of buckets for sell orders
+buy_buckets | [Bucket](#bucket) array | A sorted list of buckets for buy orders.
+buckets | map&lt;string, [Buckets](#buckets)&gt; | A map between currency tickers and sorted lists of order buckets
+## Bucket
+Parameter | Type | Description
+--------- | ---- | -----------
+price | double | The rounded price of the bucket.
+quantity | uint64 | The total quantity for all orders that fall into this bucket.
+## Buckets
+Parameter | Type | Description
+--------- | ---- | -----------
+sell_buckets | [Bucket](#bucket) array | A sorted list of buckets for sell orders
+buy_buckets | [Bucket](#bucket) array | A sorted list of buckets for buy orders.
 ## OrderRemoval
 Parameter | Type | Description
 --------- | ---- | -----------
@@ -1987,8 +2111,8 @@ sell_orders | [Order](#order) array | A list of sell orders sorted by ascending 
 ## OrdersCount
 Parameter | Type | Description
 --------- | ---- | -----------
-peer | uint32 | The number of orders belonging to remote xud nodes.
-own | uint32 | The number of orders belonging to our local xud node.
+peer | uint32 | The number of orders belonging to remote opendex nodes.
+own | uint32 | The number of orders belonging to our local opendex node.
 ## OrderUpdate
 Parameter | Type | Description
 --------- | ---- | -----------
@@ -2002,9 +2126,18 @@ node_pub_key | string | The node pub key to uniquely identify this peer.
 lnd_pub_keys | map&lt;string, string&gt; | A map of ticker symbols to lnd pub keys for this peer
 inbound | bool | Indicates whether this peer was connected inbound.
 pairs | string array | A list of trading pair tickers supported by this peer.
-xud_version | string | The version of xud being used by the peer.
+xud_version | string | The version of opendex being used by the peer.
 seconds_connected | uint32 | The time in seconds that we have been connected to this peer.
 alias | string | The alias for this peer's public key
+currency | string | A map of ticker symbols to lnd uris for this peer
+uri | string array | 
+lnd_uris | [LndUris](#lnduris) array | 
+connext_identifier | string | The connext identifier for this peer
+## LndUris
+Parameter | Type | Description
+--------- | ---- | -----------
+currency | string | 
+uri | string array | 
 ## PlaceOrderRequest
 Parameter | Type | Description
 --------- | ---- | -----------
@@ -2070,10 +2203,10 @@ This message has no parameters.
 ## RestoreNodeRequest
 Parameter | Type | Description
 --------- | ---- | -----------
-seed_mnemonic | string array | The 24 word mnemonic to recover the xud identity key and underlying wallets
-password | string | The password in utf-8 with which to encrypt the restored xud node key as well as any restored underlying wallets.
+seed_mnemonic | string array | The 24 word mnemonic to recover the opendex identity key and underlying wallets
+password | string | The password in utf-8 with which to encrypt the restored opendex node key as well as any restored underlying wallets.
 lnd_backups | map&lt;string, bytes&gt; | A map between the currency of the LND and its multi channel SCB
-xud_database | bytes | The XUD database backup
+xud_database | bytes | The opendex database backup
 ## RestoreNodeResponse
 Parameter | Type | Description
 --------- | ---- | -----------
@@ -2183,7 +2316,7 @@ This message has no parameters.
 ## UnlockNodeRequest
 Parameter | Type | Description
 --------- | ---- | -----------
-password | string | The password in utf-8 with which to unlock an existing xud node key as well as underlying client wallets such as lnd.
+password | string | The password in utf-8 with which to unlock an existing opendex node key as well as underlying client wallets such as lnd.
 ## UnlockNodeResponse
 Parameter | Type | Description
 --------- | ---- | -----------
